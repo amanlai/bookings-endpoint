@@ -94,11 +94,12 @@ async function saveBooking(bookingData, customerId) {
         const apiEndpoint = process.env.CHATTABOT_URL;
         if (apiEndpoint) {
             try {
+                const key = crypto.randomUUID();
                 const payload = {
                     business_name: process.env.BUSINESS_NAME,
                     data: bookingData
                 }
-                await axios.post(apiEndpoint, payload);
+                await axios.post(apiEndpoint, payload, {headers: {"Idempotency-Key": key}});
                 console.log('✅ Booking data forwarded successfully to chattabot');
             } catch (error) {
                 console.warn('⚠️ Error forwarding booking data to chattabot:', error.message);
